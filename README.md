@@ -1,10 +1,73 @@
-# PayloadCMS Template
+# [View Live](https://avila-cms.herokuapp.com)
 
-This is a basic template setup for PayloadCMS. It contains fields and
-blocks ready to be used for most pages and can be easily adapted to a
-front-end design.
+## [View Front-End](https://avilacare.netlify.app)
+# Installation
 
-## Details
+To install the dependencies with ESLint and Prettier, you will need to
+run `npm install --legacy-peer-deps`. This is because the payload module
+has conflicts with the new versions as dependencies of other modules.
+If the newer ones are installed it will break the admin page build.
+
+# Deployment
+
+The CMS is hosted on Heroku. To allow it to work in Heroku, we have to
+modify the install step because it will install the new dependencies
+which will break the admin page.
+
+We use the `heroku-postbuild` script will run instead of the default
+`npm run build`. Within the script, we install the modules again with
+the `--legacy-peer-deps` flag. Followed by that, we run the build
+script and the CMS is ready to be used.
+
+The `BUILD_WEBHOOK_URL` is used to send the request to the front-end
+server and rebuild. This is only required for SSG sites and can be
+modified in the `lib/triggerBuild.ts` file.
+
+## Dependencies
+
+`cross-env` and `typescript` need to be moved as a dependency from devDependency
+to allow them to be used during the build process.
+
+## **Important**
+
+Because of using the `--legacy-peer-deps` flag, the `package.json` and
+`package-lock` will not be in sync and cause the build to fail because
+of `npm ci`. To get around this, we specify the `USE_NPM_INSTALL=true`
+environment variable.
+
+Also, 
+
+## Environment Variables
+
+The following environment variables will need to be configured on the
+platform hosting the CMS:
+
+- `PAYLOAD_SECRET`
+- `MONGODB_URI`
+- `BUILD_WEBHOOK_URL`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_BUCKET`
+- `PAYLOAD_PUBLIC_AWS_PUBLIC_URL`
+- `PAYLOAD_PUBLIC_SERVER_URL` *[optional (just used to display the URL when starting up)]*
+
+# Images
+
+Images are hosted on Amazon S3.
+
+It requires multiple environment variables for the connection. It uses a hook to
+upload images to S3 and then retrieves them from there. Same goes for the thumbnails.
+
+## **Important**
+
+Because Payload uses Webpack to bundle and the `aws-sdk` uses NodeJS modules such as
+`fs` and `utils`, it will throw errors because they are not available in the browser.
+So we modify the `payload.config.ts` webpack property under `admin`. We simply just
+have to get the path of the file that will be using NodeJS modules and set the alias
+resolve to false to ignore it. We have to use the path to the file because it is not
+an npm package that is imported.
+
+# Details
 
 Contains a lot of default boilerplate that can be used for multiple
 websites and quickly modified to meet the specific needs.

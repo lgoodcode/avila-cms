@@ -1,20 +1,6 @@
 import express from 'express'
 import payload from 'payload'
-import { config as dotenv } from 'dotenv'
-
-if (process.env.NODE_ENV !== 'production') {
-	dotenv({ path: '.env.development' })
-}
-
-dotenv()
-
-if (!process.env.PAYLOAD_SECRET) {
-	throw new Error('[env] PAYLOAD_SECRET is not defined')
-}
-
-if (!process.env.MONGODB_URI) {
-	throw new Error('[env] MONGODB_URI is not defined')
-}
+import './lib/env'
 
 const app = express()
 
@@ -29,6 +15,7 @@ payload.init({
 	express: app,
 	// TODO: configure email service
 	// email: {
+
 	// },
 	onInit: () => {
 		payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
@@ -43,4 +30,4 @@ process.on('uncaughtException', (err) => {
 	process.exit(1)
 })
 
-app.listen(process.env.PAYLOAD_PUBLIC_PORT || 4000)
+app.listen(process.env.PORT)
