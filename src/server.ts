@@ -14,9 +14,7 @@ payload.init({
 	mongoURL: process.env.MONGODB_URI,
 	express: app,
 	// TODO: configure email service
-	// email: {
-
-	// },
+	// email: {},
 	onInit: () => {
 		payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
 	},
