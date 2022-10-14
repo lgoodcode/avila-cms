@@ -10,6 +10,18 @@ If the newer ones are installed it will break the admin page build.
 
 # Deployment
 
+The `BUILD_WEBHOOK_URL` is used to send the request to the front-end
+server and rebuild. This is only required for SSG sites and can be
+modified in the `lib/triggerBuild.ts` file.
+
+Install with `npm install --legacy-peer-deps` prior to building. It is
+currently hosted on [Render](Render.com), which allows you to specify the
+commands. 
+
+## IMPORTANT
+
+The following steps are for deployment to Heroku.
+
 The CMS is hosted on Heroku. To allow it to work in Heroku, we have to
 modify the install step because it will install the new dependencies
 which will break the admin page.
@@ -18,10 +30,6 @@ We use the `heroku-postbuild` script will run instead of the default
 `npm run build`. Within the script, we install the modules again with
 the `--legacy-peer-deps` flag. Followed by that, we run the build
 script and the CMS is ready to be used.
-
-The `BUILD_WEBHOOK_URL` is used to send the request to the front-end
-server and rebuild. This is only required for SSG sites and can be
-modified in the `lib/triggerBuild.ts` file.
 
 ## Dependencies
 
